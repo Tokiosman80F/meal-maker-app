@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ErrorMessage from "./components/ErrorMessage";
 import Loader from "./components/Loader";
 import RecipeCard from "./components/RecipeCard";
+import RecipeDetail from "./components/RecipeDetail";
 import SearchBar from "./components/SearchBar";
 
 const API_URL = "https://www.themealdb.com/api/json/v1/1";
@@ -11,6 +12,7 @@ export default function App() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   console.log("recipes", recipes);
   useEffect(() => {
@@ -35,6 +37,13 @@ export default function App() {
     }
     fetchRecipes();
   }, [query]);
+  if (selected) {
+    return (
+      <div className="mx-auto max-w-6xl p-6">
+        <RecipeDetail meal={selected} onBack={() => setSelected(null)} />
+      </div>
+    );
+  }
   return (
     <div className="mx-auto max-w-6xl p-6">
       <header className="flex items-center justify-between">
@@ -57,7 +66,7 @@ export default function App() {
             image={recipe.strMealThumb}
             category={recipe.strCategory}
             area={recipe.strArea}
-            onSelect={() => console.log(recipe.strMeal)}
+            onSelect={() => setSelected(recipe)}
           />
         ))}
       </div>
