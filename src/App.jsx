@@ -4,6 +4,7 @@ import Loader from "./components/Loader";
 import RecipeCard from "./components/RecipeCard";
 import RecipeDetail from "./components/RecipeDetail";
 import SearchBar from "./components/SearchBar";
+import ThemeToggle from "./components/ThemeToggle";
 
 const API_URL = "https://www.themealdb.com/api/json/v1/1";
 
@@ -48,6 +49,7 @@ export default function App() {
     <div className="mx-auto max-w-6xl p-6">
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Recipe Finder</h1>
+        <ThemeToggle />
       </header>
 
       <SearchBar onSearch={setQuery} />
