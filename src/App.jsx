@@ -1,21 +1,54 @@
 import { useEffect, useState } from "react";
+import ErrorMessage from "./components/ErrorMessage";
+import Loader from "./components/Loader";
 import RecipeCard from "./components/RecipeCard";
+import SearchBar from "./components/SearchBar";
 
 const API_URL = "https://www.themealdb.com/api/json/v1/1";
-export default function App() {
-  const [recipes, setRecipes] = useState([]);
 
+export default function App() {
+  const [query, setQuery] = useState("chicken");
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  console.log("recipes", recipes);
   useEffect(() => {
     async function fetchRecipes() {
-      const res = await fetch(`${API_URL}/search.php?s=chicken`);
-      const data = await res.json();
-      setRecipes(data.meals ?? []);
+      setLoading(false);
+      setError(null);
+
+      try {
+        const res = await fetch(
+          `${API_URL}/search.php?s=${encodeURIComponent(query)}`,
+        );
+
+        if (!res.ok) throw new Error(`Request faild : ${res.status}`);
+        const data = await res.json();
+        setRecipes(data.meals ?? []);
+      } catch (err) {
+        setRecipes([]);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchRecipes();
-  }, []);
+  }, [query]);
   return (
     <div className="mx-auto max-w-6xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Meal Maker app</h1>
+      <header className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Recipe Finder</h1>
+      </header>
+
+      <SearchBar onSearch={setQuery} />
+      {loading && <Loader />}
+      {error && <ErrorMessage message={error} />}
+
+      {!loading && !error && recipes.length === 0 && (
+        <p className="opacity-70"> No recipe found for : {query} </p>
+      )}
+
       <div className="  grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {recipes.map((recipe) => (
           <RecipeCard
@@ -24,7 +57,7 @@ export default function App() {
             image={recipe.strMealThumb}
             category={recipe.strCategory}
             area={recipe.strArea}
-            onSelect={() => console.log("clicked")}
+            onSelect={() => console.log(recipe.strMeal)}
           />
         ))}
       </div>
