@@ -1,4 +1,5 @@
 import { parseIngredients } from "../utils/parseIngredients";
+import Button from "./Button";
 
 export default function RecipeDetail({ meal, onBack }) {
   const ingredients = parseIngredients(meal);
@@ -9,12 +10,7 @@ export default function RecipeDetail({ meal, onBack }) {
 
   return (
     <section>
-      <button
-        onClick={onBack}
-        className="cursor-pointer rounded-xl bg-orange-500 px-4 py-2 font-medium text-white hover:bg-orange-600"
-      >
-        ← Back to results
-      </button>
+      <Button onClick={onBack}> ← Back to results</Button>
       <h2 className="mt-6 text-3xl font-bold">{meal.strMeal}</h2>
       <p className="mb-4 opacity-70">
         {meal.strCategory} · {meal.strArea}

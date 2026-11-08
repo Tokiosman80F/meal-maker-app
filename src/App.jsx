@@ -52,14 +52,14 @@ export default function App() {
         <ThemeToggle />
       </header>
 
-      <SearchBar onSearch={setQuery} />
+      <SearchBar onSearch={setQuery} onClear={() => setQuery("chicken")} />
       {loading && <Loader />}
       {error && <ErrorMessage message={error} />}
 
       {!loading && !error && recipes.length === 0 && (
         <p className="opacity-70"> No recipe found for : {query} </p>
       )}
-
+      <div>Number of recipe : {recipes.length}</div>
       <div className="  grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {recipes.map((recipe) => (
           <RecipeCard
